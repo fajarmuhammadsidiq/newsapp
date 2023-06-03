@@ -30,7 +30,7 @@ class ApiProvider {
 
       Map<String, dynamic> data =
           json.decode(response.body) as Map<String, dynamic>;
-
+      print(data);
       return Headlines.fromJson(data);
     } catch (error, stacktrace) {
       if (kDebugMode) {

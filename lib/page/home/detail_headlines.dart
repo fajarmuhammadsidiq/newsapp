@@ -23,12 +23,12 @@ class _detailHeadlinesNewsPageState extends State<detailHeadlinesNewsPage> {
   @override
   Widget build(BuildContext context) {
     Article? data = ModalRoute.of(context)!.settings.arguments as Article?;
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final newsBloc = BlocProvider.of<SourceNewsBloc>(context);
-      newsBloc.add(ApiNewsEvent(name: data!.source!.id.toString()));
     });
-
-    String defaultImage = "https://ui-avatars.com/api/?name=${data?.author}}";
+    newsBloc.add(ApiNewsEvent(name: data!.source!.name.toString()));
+    String defaultImage = "https://ui-avatars.com/api/?name=${data.author}}";
 
     return Scaffold(
         body: Container(
@@ -41,7 +41,7 @@ class _detailHeadlinesNewsPageState extends State<detailHeadlinesNewsPage> {
                 height: 350,
                 color: Colors.transparent,
                 child: CachedNetworkImage(
-                  imageUrl: "${data!.urlToImage}",
+                  imageUrl: "${data.urlToImage}",
                   fit: BoxFit.cover,
                   placeholder: (context, url) =>
                       const CircularProgressIndicator(),
@@ -49,131 +49,125 @@ class _detailHeadlinesNewsPageState extends State<detailHeadlinesNewsPage> {
                       Image.asset("assets/Image.png", fit: BoxFit.cover),
                 ),
               ),
-              Column(
+              ListView(
                 children: [
                   Container(
                     width: MediaQuery.of(context).size.width,
-                    height: 300,
+                    height: 250,
                     color: Colors.transparent,
                   ),
-                  Expanded(
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.width,
-                      decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(40),
-                              topRight: Radius.circular(40))),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              textAlign: TextAlign.start,
-                              data.title.toString(),
-                              style: const TextStyle(
-                                fontSize: 24,
-                              ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                    decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(40),
+                            topRight: Radius.circular(40))),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            textAlign: TextAlign.start,
+                            data.title.toString(),
+                            style: const TextStyle(
+                              fontSize: 24,
                             ),
-                            const SizedBox(height: 20),
-                            Row(
-                              children: [
-                                CircleAvatar(
-                                  backgroundImage: NetworkImage(defaultImage),
-                                ),
-                                const SizedBox(width: 10),
-                                Flexible(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        data.author.toString() != "null"
-                                            ? data.author.toString()
-                                            : "Anonymous",
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      const SizedBox(height: 10),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            DateFormat.yMMMEd().format(
-                                                DateTime.parse(data.publishedAt
-                                                    .toString())),
+                          ),
+                          const SizedBox(height: 20),
+                          Row(
+                            children: [
+                              CircleAvatar(
+                                backgroundImage: NetworkImage(defaultImage),
+                              ),
+                              const SizedBox(width: 10),
+                              Flexible(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      data.author.toString() != "null"
+                                          ? data.author.toString()
+                                          : "Anonymous",
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          DateFormat.yMMMEd().format(
+                                              DateTime.parse(
+                                                  data.publishedAt.toString())),
+                                          style: const TextStyle(),
+                                        ),
+                                        const SizedBox(width: 5),
+                                        Flexible(
+                                          child: Text(
+                                            data.source!.name.toString(),
                                             style: const TextStyle(),
                                           ),
-                                          const SizedBox(width: 5),
-                                          Flexible(
-                                            child: Text(
-                                              data.source!.name.toString(),
-                                              style: const TextStyle(),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 20),
-                            Text(
-                              textAlign: TextAlign.justify,
-                              data.description.toString(),
-                              style: const TextStyle(),
-                            ),
-                            const SizedBox(height: 20),
-                            Text(
-                              textAlign: TextAlign.start,
-                              "More from " + data.source!.name.toString(),
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(height: 20),
-                            BlocProvider(
-                              create: (_) => newsBloc,
-                              child: Container(
-                                margin: const EdgeInsets.all(8.0),
-                                child: BlocListener<SourceNewsBloc,
-                                    SourceNewsState>(
-                                  listener: (context, state) {
-                                    if (state is SourceNewsStateError) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                          content: Text(state.errorMessage),
                                         ),
-                                      );
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          Text(
+                            textAlign: TextAlign.justify,
+                            data.description.toString(),
+                            style: const TextStyle(),
+                          ),
+                          const SizedBox(height: 20),
+                          Text(
+                            textAlign: TextAlign.start,
+                            "More from " + data.source!.name.toString(),
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 20),
+                          BlocProvider(
+                            create: (_) => newsBloc,
+                            child: Container(
+                              margin: const EdgeInsets.all(8.0),
+                              child:
+                                  BlocListener<SourceNewsBloc, SourceNewsState>(
+                                listener: (context, state) {
+                                  if (state is SourceNewsStateError) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(state.errorMessage),
+                                      ),
+                                    );
+                                  }
+                                },
+                                child: BlocBuilder<SourceNewsBloc,
+                                    SourceNewsState>(
+                                  builder: (context, state) {
+                                    if (state is SourceNewsStateInitial) {
+                                      return buildLoading();
+                                    } else if (state
+                                        is SourceNewsStateLoading) {
+                                      return buildLoading();
+                                    } else if (state
+                                        is SourceNewsStateCompleted) {
+                                      return buildCardDetail(
+                                          context, state.headlines);
+                                    } else if (state is SourceNewsStateError) {
+                                      return Container();
+                                    } else {
+                                      return Container();
                                     }
                                   },
-                                  child: BlocBuilder<SourceNewsBloc,
-                                      SourceNewsState>(
-                                    builder: (context, state) {
-                                      if (state is SourceNewsStateInitial) {
-                                        return _buildLoading();
-                                      } else if (state
-                                          is SourceNewsStateLoading) {
-                                        return _buildLoading();
-                                      } else if (state
-                                          is SourceNewsStateCompleted) {
-                                        return buildCard(
-                                            context, state.headlines);
-                                      } else if (state
-                                          is SourceNewsStateError) {
-                                        return Container();
-                                      } else {
-                                        return Container();
-                                      }
-                                    },
-                                  ),
                                 ),
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -190,62 +184,4 @@ class _detailHeadlinesNewsPageState extends State<detailHeadlinesNewsPage> {
                       child: BackButton(color: Colors.black))),
             ])));
   }
-}
-
-Widget _buildLoading() => const Center(child: CircularProgressIndicator());
-Widget buildCard(BuildContext context, Headlines model) {
-  return Container(
-    width: MediaQuery.of(context).size.width,
-    height: 400,
-    child: ListView.builder(
-      scrollDirection: Axis.horizontal,
-      itemCount: 5,
-      itemBuilder: (context, index) {
-        final data = model.articles![index];
-        return InkWell(
-          onTap: () {},
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Container(
-              width: 250,
-              height: 400,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Column(
-                children: [
-                  Container(
-                    width: double.infinity,
-                    height: 300,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: CachedNetworkImage(
-                        imageUrl: "${data.urlToImage}",
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) =>
-                            CircularProgressIndicator(),
-                        errorWidget: (context, url, error) =>
-                            Image.asset("assets/Image.png", fit: BoxFit.cover),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Expanded(
-                    child: Text(
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        "${model.articles![index].title}",
-                        style: TextStyle(fontSize: 20)),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    ),
-  );
 }
