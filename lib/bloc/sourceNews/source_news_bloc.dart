@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../model/headlines_model.dart';
-import '../../page/home/detail_headlines.dart';
+import '../../page/detailPage/detail_headlines.dart';
 import '../../resources/api_repository.dart';
 
 part 'source_news_event.dart';

@@ -16,6 +16,10 @@ class ApiRepository {
   Future<Headlines> fetchMoreSource(String source) {
     return _provider.moreFromSource(source);
   }
+
+  Future<Headlines> fetchExploreNews() {
+    return _provider.exploreNews();
+  }
 }
 
 class NetworkError extends Error {}

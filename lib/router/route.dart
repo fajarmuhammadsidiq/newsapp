@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:news/page/explore/explore_page.dart';
-import 'package:news/page/home/detail_headlines.dart';
+import 'package:news/page/detailPage/detail_headlines.dart';
 import 'package:news/page/home/home_page.dart';
 import 'package:news/page/profile/profile_page.dart';
 

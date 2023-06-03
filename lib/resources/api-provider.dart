@@ -58,4 +58,21 @@ class ApiProvider {
       return Headlines.withError("Data not found / Connection issue");
     }
   }
+
+  Future<Headlines> exploreNews() async {
+    try {
+      var response = await http.get(Uri.parse(base.exploreNews),
+          headers: {"X-Api-Key": base.apiKey});
+
+      Map<String, dynamic> data =
+          json.decode(response.body) as Map<String, dynamic>;
+      print(data);
+      return Headlines.fromJson(data);
+    } catch (error, stacktrace) {
+      if (kDebugMode) {
+        print("Exception occured: $error stackTrace: $stacktrace");
+      }
+      return Headlines.withError("Data not found / Connection issue");
+    }
+  }
 }

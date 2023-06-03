@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news/bloc/api/api_bloc.dart';
 import 'package:news/model/headlines_model.dart';
-import '../../bloc/travel/travel_news_bloc.dart';
+import '../../bloc/travelNews/travel_news_bloc.dart';
 import '../../controller/page_controller.dart';
 import '../../router/route.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 import '../../widget/appbar_home.dart';
+import '../../widget/build_card_detailPage.dart';
+import '../../widget/loading_state.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({
@@ -60,9 +62,9 @@ class _HomePageState extends State<HomePage> {
                       child: BlocBuilder<TravelNewsBloc, TravelNewsState>(
                         builder: (context, state) {
                           if (state is TravelNewsStateInitial) {
-                            return _buildLoading();
+                            return buildLoading();
                           } else if (state is TravelNewsStateLoading) {
-                            return _buildLoading();
+                            return buildLoading();
                           } else if (state is TravelNewsStateCompleted) {
                             return buildCard(context, state.headlines);
                           } else if (state is TravelNewsStateEror) {
@@ -92,9 +94,9 @@ class _HomePageState extends State<HomePage> {
                       child: BlocBuilder<ApiBloc, ApiState>(
                         builder: (context, state) {
                           if (state is ApiStateInitial) {
-                            return _buildLoading();
+                            return buildLoading();
                           } else if (state is ApiStateLoading) {
-                            return _buildLoading();
+                            return buildLoading();
                           } else if (state is ApiStateCompleted) {
                             return buildCard(context, state.headlines);
                           } else if (state is ApiStateEror) {
@@ -152,66 +154,4 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
-  Widget buildCard(BuildContext context, Headlines model) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: 400,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: model.articles!.length,
-        itemBuilder: (context, index) {
-          final data = model.articles![index];
-          return InkWell(
-            onTap: () {
-              Navigator.pushNamed(context, Routes.detailPage, arguments: data);
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Container(
-                width: 250,
-                height: 400,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Column(
-                  children: [
-                    Container(
-                      width: double.infinity,
-                      height: 300,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: CachedNetworkImage(
-                          imageUrl: "${data.urlToImage}",
-                          fit: BoxFit.cover,
-                          placeholder: (context, url) =>
-                              CircularProgressIndicator(),
-                          errorWidget: (context, url, error) => Image.asset(
-                              "assets/Image.png",
-                              fit: BoxFit.cover),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Expanded(
-                      child: Text(
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          "${model.articles![index].title}",
-                          style: TextStyle(fontSize: 20)),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildLoading() => const Center(child: CircularProgressIndicator());
 }

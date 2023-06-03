@@ -24,19 +24,17 @@ class FavoritePage extends StatelessWidget {
             title: Text("Home"),
             selectedColor: Colors.purple,
           ),
+          SalomonBottomBarItem(
+            icon: Icon(Icons.search),
+            title: Text("Search"),
+            selectedColor: Colors.orange,
+          ),
 
           /// Likes
           SalomonBottomBarItem(
             icon: Icon(Icons.favorite_border),
             title: Text("Likes"),
             selectedColor: Colors.pink,
-          ),
-
-          /// Search
-          SalomonBottomBarItem(
-            icon: Icon(Icons.search),
-            title: Text("Search"),
-            selectedColor: Colors.orange,
           ),
 
           /// Profile
